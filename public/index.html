@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Smart URL Shortener</title>
+
+    <style>
+
+        body {
+
+            font-family: Arial;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        input {
+
+            width: 400px;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        img {
+
+            margin-top: 20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1>Smart URL Shortener 🚀</h1>
+
+    <input
+        type="text"
+        id="url"
+        placeholder="Enter Long URL"
+    >
+
+    <br>
+
+    <input
+        type="text"
+        id="custom"
+        placeholder="Custom Short Code (Optional)"
+    >
+
+    <br>
+
+    <button onclick="shortenUrl()">
+
+        Shorten URL
+
+    </button>
+
+    <button onclick="copyUrl()">
+
+        Copy URL
+
+    </button>
+
+    <h3 id="result"></h3>
+
+    <img id="qr" width="200">
+
+<script>
+
+async function shortenUrl() {
+
+    const originalUrl =
+        document.getElementById("url").value;
+
+    const customCode =
+        document.getElementById("custom").value;
+
+    const response = await fetch("/shorten", {
+
+        method: "POST",
+
+        headers: {
+
+            "Content-Type": "application/json"
+
+        },
+
+        body: JSON.stringify({
+
+            originalUrl,
+            customCode
+
+        })
+
+    });
+
+    const data = await response.json();
+
+    document.getElementById("result")
+        .innerHTML =
+        `<a href="${data.shortUrl}" target="_blank">
+            ${data.shortUrl}
+        </a>`;
+
+    document.getElementById("qr").src =
+        data.qrImage;
+}
+
+
+function copyUrl() {
+
+    const text =
+        document.getElementById("result")
+        .innerText;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Copied!");
+}
+
+</script>
+
+</body>
+
+</html>
